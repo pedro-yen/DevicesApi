@@ -1,41 +1,96 @@
+using DevicesApi.Common.Exceptions;
+using DevicesApi.Data;
+using DevicesApi.Data.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Devices API",
+        Version = "v1",
+        Description = "REST API for managing devices",
+        Contact = new OpenApiContact
+        {
+            Name = "Pedro Yen",
+            Email = "pedro.yen@outlook.com",
+            Url = new Uri("https://github.com/pedro-yen")
+        }
+    });
+});
+
+#region DB setup
+// Configure SQLite database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(connectionString));
+
+#endregion
+#region FluentValidation
+// Register FluentValidation validators
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<DeviceCreateDtoValidator>();
+//builder.Services.AddScoped<IValidator<EmployeeRequestDto>, EmployeeRequestValidator>();
+//builder.Services.AddScoped<IValidator<VacationRequestDto>, VacationRequestDtoValidator>();
+
+
+builder.Services.AddFluentValidationAutoValidation();
+#endregion
+
+#region Dependency Injection
+// Dependency Injection for Repositories and Managers
+builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+
+#endregion
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
+app.MapControllers();
+
+// Apply pending migrations at startup
+using (var scope = app.Services.CreateScope())
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (exception is NotFoundException)
+        {
+            context.Response.StatusCode = 404;
+            await context.Response.WriteAsync(exception.Message);
+        }
+
+    });
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
