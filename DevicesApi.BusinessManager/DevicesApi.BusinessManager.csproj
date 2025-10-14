@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\DevicesApi.Common\DevicesApi.Common.csproj" />
-    <ProjectReference Include="..\DevicesApi.Data\DevicesApi.Data.csproj" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\DevicesApi.Common\DevicesApi.Common.csproj" />
+    <ProjectReference Include="..\DevicesApi.Data\DevicesApi.Data.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

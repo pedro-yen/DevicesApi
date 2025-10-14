@@ -1,5 +1,4 @@
 ﻿using DevicesApi.Common.Devices.Enums;
-using DevicesApi.Data.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

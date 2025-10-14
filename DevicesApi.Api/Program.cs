@@ -1,3 +1,5 @@
+using DevicesApi.BusinessManager.Contracts.Validators.Device;
+using DevicesApi.BusinessManager.Services.Devices;
 using DevicesApi.Common.Exceptions;
 using DevicesApi.Data;
 using DevicesApi.Data.Repositories;
@@ -35,9 +37,12 @@ builder.Services.AddSwaggerGen(options =>
 // Configure SQLite database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(connectionString,
+        x => x.MigrationsAssembly("DevicesApi.Data")));
 
 #endregion
+
+
 #region FluentValidation
 // Register FluentValidation validators
 builder.Services.AddFluentValidationAutoValidation();
@@ -52,9 +57,14 @@ builder.Services.AddFluentValidationAutoValidation();
 #region Dependency Injection
 // Dependency Injection for Repositories and Managers
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+builder.Services.AddScoped<IDeviceBusinessManager, DeviceBusinessManager>();
 
 #endregion
 
+#region Logging
+builder.Logging.AddConsole();
+
+#endregion
 
 var app = builder.Build();
 
