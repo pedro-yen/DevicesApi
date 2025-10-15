@@ -69,7 +69,7 @@ builder.Services.AddScoped<IDeviceBusinessManager, DeviceBusinessManager>();
 builder.Logging.AddConsole();
 
 #endregion
-
+builder.WebHost.UseUrls("http://*:80");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
