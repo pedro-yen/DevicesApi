@@ -57,9 +57,9 @@ namespace DevicesApi.Api.Controllers
         /// </summary>
         /// <param name="state">
         /// The state of the device:
-        /// - <c>Active</c>: Available and ready for use
-        /// - <c>InUse</c>: Currently in use or assigned
-        /// - <c>Inactive</c>: Not active, possibly decommissioned or offline
+        /// - <c>Active - 0</c>: Available and ready for use
+        /// - <c>InUse - 1</c>: Currently in use or assigned
+        /// - <c>Inactive - 2</c>: Not active, possibly decommissioned or offline
         /// </param>
         [HttpGet("state/{state}")]
         public async Task<ActionResult<IEnumerable<Device>>> GetByState(DeviceState state)
