@@ -15,32 +15,39 @@ namespace DevicesApi.BusinessManager.Services.Devices
     public class DeviceBusinessManager : IDeviceBusinessManager
     {
         private readonly IDeviceRepository _repository;
-
         public DeviceBusinessManager(IDeviceRepository repository)
         {
             _repository = repository;
         }
 
+        ///<inheritdoc/>
         public async Task<Device?> GetByIdAsync(Guid id)
         {
-            return await _repository.GetByIdAsync(id);
+            var device =  await _repository.GetByIdAsync(id);
+            if (device == null)
+                throw new NotFoundException($"Device {id} not found.");
+            return device;
         }
 
+        ///<inheritdoc/>
         public async Task<IEnumerable<Device>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }
 
+        ///<inheritdoc/>
         public async Task<IEnumerable<Device>> GetByBrandAsync(string brand)
         {
             return await _repository.GetByBrandAsync(brand);
         }
 
+        ///<inheritdoc/>
         public async Task<IEnumerable<Device>> GetByStateAsync(DeviceState state)
         {
             return await _repository.GetByStateAsync(state);
         }
 
+        ///<inheritdoc/>
         public async Task<Device> CreateAsync(Device device)
         {
             device.Id = Guid.NewGuid();
@@ -49,6 +56,7 @@ namespace DevicesApi.BusinessManager.Services.Devices
             return device;
         }
 
+        ///<inheritdoc/>
         public async Task<Device> PartialUpdateAsync(Guid id, DeviceUpdateDto dto)
         {
             var device = await _repository.GetByIdAsync(id);
@@ -72,6 +80,7 @@ namespace DevicesApi.BusinessManager.Services.Devices
             return device;
         }
 
+        ///<inheritdoc/>
         public async Task<Device> PartialUpdateAsync(Guid id, Action<Device> patch)
         {
             var device = await _repository.GetByIdAsync(id);
@@ -95,6 +104,7 @@ namespace DevicesApi.BusinessManager.Services.Devices
             return device;
         }
 
+        ///<inheritdoc/>
         public async Task DeleteAsync(Guid id)
         {
             var device = await _repository.GetByIdAsync(id);

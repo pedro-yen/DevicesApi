@@ -19,16 +19,21 @@ namespace DevicesApi.Api.Controllers
             _deviceManager = deviceManager;
         }
 
+        /// <summary>
+        /// Retrieves a device by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the device</param>
         [HttpGet("{id}")]
         public async Task<ActionResult<Device>> GetById(Guid id)
         {
             var device = await _deviceManager.GetByIdAsync(id);
-            if (device == null)
-                throw new NotFoundException($"Device {id} not found.");
 
             return Ok(device);
         }
 
+        /// <summary>
+        /// Retrieves all devices
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Device>>> GetAll()
         {
@@ -36,6 +41,10 @@ namespace DevicesApi.Api.Controllers
             return Ok(devices);
         }
 
+        /// <summary>
+        /// Retrieves devices by brand
+        /// </summary>
+        /// <param name="brand">The Brand identifier</param>
         [HttpGet("brand/{brand}")]
         public async Task<ActionResult<IEnumerable<Device>>> GetByBrand(string brand)
         {
@@ -43,6 +52,15 @@ namespace DevicesApi.Api.Controllers
             return Ok(devices);
         }
 
+        /// <summary>
+        /// Retrieves devices filtered by their operational state.
+        /// </summary>
+        /// <param name="state">
+        /// The state of the device:
+        /// - <c>Active</c>: Available and ready for use
+        /// - <c>InUse</c>: Currently in use or assigned
+        /// - <c>Inactive</c>: Not active, possibly decommissioned or offline
+        /// </param>
         [HttpGet("state/{state}")]
         public async Task<ActionResult<IEnumerable<Device>>> GetByState(DeviceState state)
         {
@@ -50,6 +68,10 @@ namespace DevicesApi.Api.Controllers
             return Ok(devices);
         }
 
+        /// <summary>
+        /// Creates a new device
+        /// </summary>
+        /// <param name="dto">Create new device request</param>
         [HttpPost]
         public async Task<ActionResult<Device>> Create(DeviceCreateDto dto)
         {
@@ -65,6 +87,11 @@ namespace DevicesApi.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
+        /// <summary>
+        /// Updates an existing device
+        /// </summary>
+        /// <param name="id">The unique identifier of the device</param>
+        /// <param name="dto">Update device request</param>
         [HttpPut("{id}")]
         public async Task<ActionResult<Device>> Update(Guid id, DeviceUpdateDto dto)
         {
@@ -72,6 +99,10 @@ namespace DevicesApi.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Deletes a device by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the device</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
