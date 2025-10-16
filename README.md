@@ -43,7 +43,9 @@ Then open:
 ```
 http://localhost:5239/swagger/index.html
 ```
+
 ---
+
 ## 🐳 Running with Docker
 
 ### Build the image
@@ -65,25 +67,10 @@ Then open:
 ```
 http://localhost:<host-port>/swagger/index.html
 ```
-Note: `http://localhost:<host-port>` returns 404 — Swagger is available at `/swagger/index.html`.
 
----
+> **Note:** `http://localhost:<host-port>` returns 404 — Swagger is available at `/swagger/index.html`.
 
-## 🗃️ Database
-
-The API uses a pre-seeded SQLite database (`devices.db`) included in the image.
-
-### Mount your own DB (optional)
-
-```bash
-docker run -p 5000:80 --name devices-api-dev -e ASPNETCORE_ENVIRONMENT=Development -v ${PWD}/DevicesApi.Api/devices.db:/app/devices.db devices-api
-```
-
-> On Windows PowerShell, use:
-
-```powershell
-docker run -p 5000:80 --name devices-api-dev -e ASPNETCORE_ENVIRONMENT=Development -v ${PWD}\DevicesApi.Api\devices.db:/app/devices.db devices-api
-```
+> ℹ️ The application uses a pre-seeded SQLite database (`devices.db`) included in the Docker image.
 
 ---
 
@@ -99,6 +86,10 @@ docker run -p 5000:80 --name devices-api-dev -e ASPNETCORE_ENVIRONMENT=Developme
 
 - Add authentication and role-based access
 - Expand DTO validation
-- Add Service layer after implementing role based access
+- Add Service layer after implementing role-based access
 - Migrate to PostgreSQL or SQL Server for production
 - Add brand entity or brand management
+
+---
+
+This project was built as part of a technical challenge and is intended for demonstration purposes.
