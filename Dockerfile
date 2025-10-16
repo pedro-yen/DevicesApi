@@ -9,4 +9,5 @@ RUN dotnet publish DevicesApi.Api/DevicesApi.Api.csproj -c Release -o /app/publi
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+COPY DevicesApi.Api/devices.db /app/devices.db
 ENTRYPOINT ["dotnet", "DevicesApi.Api.dll"]
