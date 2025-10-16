@@ -65,8 +65,7 @@ Then open:
 ```
 http://localhost:<host-port>/swagger/index.html
 ```
-
-> Note: `http://localhost:<host-port>` returns 404 — Swagger is available at `/swagger/index.html`.
+Note: `http://localhost:<host-port>` returns 404 — Swagger is available at `/swagger/index.html`.
 
 ---
 
