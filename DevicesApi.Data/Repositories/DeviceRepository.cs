@@ -4,6 +4,7 @@ using DevicesApi.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace DevicesApi.Data.Repositories
             await _context.Devices.FindAsync(id);
 
         ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter)
+        public async Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter, int pageSize, Guid? lastSeenId, DateTime? lastSeenCreatedAt)
         {
             var query = _context.Devices.AsQueryable();
 
@@ -37,10 +38,24 @@ namespace DevicesApi.Data.Repositories
             {
                 query = query.Where(x => x.State == filter.State);
             }
+            if (lastSeenId.HasValue && lastSeenCreatedAt.HasValue)
+            {
+                query = query.Where(d =>
+                    d.CreatedAt > lastSeenCreatedAt.Value ||
+                    (d.CreatedAt == lastSeenCreatedAt.Value && d.Id.CompareTo(lastSeenId.Value) > 0));
+            }
 
-            return await query.ToListAsync();
+            return await query.OrderBy(d => d.Id).Take(pageSize).ToListAsync();
         }
 
+        ///<inheritdoc/>
+        public async Task<DateTime?> GetCreatedAtAsync(Guid id)
+        {
+            return await _context.Devices
+                .Where(d => d.Id == id)
+                .Select(d => d.CreatedAt)
+                .FirstOrDefaultAsync();
+        }
         ///<inheritdoc/>
         public async Task AddAsync(Device device)
         {

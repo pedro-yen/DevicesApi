@@ -2,6 +2,7 @@
 using DevicesApi.Common.Devices.DTOs;
 using DevicesApi.Common.Devices.Enums;
 using DevicesApi.Common.Exceptions;
+using DevicesApi.Common.Utils;
 using DevicesApi.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,7 @@ namespace DevicesApi.Api.Controllers
         /// Retrieves devices with optional filters 
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Device>>> GetAll([FromQuery] DeviceFilterDto filter)
+        public async Task<ActionResult<KeysetPagedResult<Device>>> GetAll([FromQuery] DeviceFilterDto filter)
         {
             var devices = await _deviceManager.GetAllAsync(filter);
             return Ok(devices);

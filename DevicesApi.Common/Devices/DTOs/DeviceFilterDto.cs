@@ -11,5 +11,7 @@ namespace DevicesApi.Common.Devices.DTOs
     {
         public string? Brand {  get; set; }
         public DeviceState? State { get; set; }
+        public int? PageSize { get; set; } = 10;
+        public Guid? LastSeenId { get; set; }
     }
 }

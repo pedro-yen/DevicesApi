@@ -1,5 +1,6 @@
 ﻿using DevicesApi.Common.Devices.DTOs;
 using DevicesApi.Common.Devices.Enums;
+using DevicesApi.Common.Utils;
 using DevicesApi.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace DevicesApi.BusinessManager.Services.Devices
         /// <summary>
         /// Retrieves devices with optional filters 
         /// </summary>
-        Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter);
+        Task<KeysetPagedResult<Device>> GetAllAsync(DeviceFilterDto filter);
 
         /// <summary>
         /// Creates a new device.

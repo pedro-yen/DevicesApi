@@ -23,7 +23,12 @@ namespace DevicesApi.Data.Repositories
         /// <summary>
         /// Retrieves all devices from the data store with optional filters
         /// </summary>
-        Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter);
+        Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter, int pageSize, Guid? lastSeenId, DateTime? lastSeenCreatedAt);
+
+        /// <summary>
+        /// Get created at timestamp for a device by its unique identifier lightweigh for pagination query
+        /// </summary>
+        Task<DateTime?> GetCreatedAtAsync(Guid id);
 
         /// <summary>
         /// Adds a new device to the data store

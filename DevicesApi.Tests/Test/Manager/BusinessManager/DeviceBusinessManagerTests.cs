@@ -63,15 +63,6 @@ namespace DevicesApi.Tests.Test.Manager.BusinessManager
         }
 
         [Fact]
-        public async Task PartialUpdatePatch_ThrowsValidation_WhenCreationTimeChanged()
-        {
-            var id = DeviceFixtures.ActiveDevice.Id;
-            var patch = new Action<Device>(d => d.CreatedAt = DateTime.UtcNow.AddDays(1));
-
-            await Assert.ThrowsAsync<ValidationException>(() => _manager.PartialUpdateAsync(id, patch));
-        }
-
-        [Fact]
         public async Task Delete_ThrowsValidation_WhenDeviceInUse()
         {
             var id = DeviceFixtures.InUseDevice.Id;
