@@ -1,4 +1,5 @@
-﻿using DevicesApi.Common.Devices.Enums;
+﻿using DevicesApi.Common.Devices.DTOs;
+using DevicesApi.Common.Devices.Enums;
 using DevicesApi.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,26 +21,9 @@ namespace DevicesApi.Data.Repositories
         Task<Device?> GetByIdAsync(Guid id);
 
         /// <summary>
-        /// Retrieves all devices from the data store
+        /// Retrieves all devices from the data store with optional filters
         /// </summary>
-        Task<IEnumerable<Device>> GetAllAsync();
-
-        /// <summary>
-        /// Retrieves devices filtered by brand
-        /// </summary>
-        /// <param name="brand">The brand name to filter by</param>
-        Task<IEnumerable<Device>> GetByBrandAsync(string brand);
-
-        /// <summary>
-        /// Retrieves devices filtered by their operational state
-        /// </summary>
-        /// <param name="state">
-        /// The state of the device:
-        /// - <c>Active</c>: Available and ready for use
-        /// - <c>InUse</c>: Currently in use or assigned
-        /// - <c>Inactive</c>: Not active, possibly decommissioned or offline
-        /// </param>
-        Task<IEnumerable<Device>> GetByStateAsync(DeviceState state);
+        Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter);
 
         /// <summary>
         /// Adds a new device to the data store

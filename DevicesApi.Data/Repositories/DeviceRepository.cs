@@ -1,4 +1,5 @@
-﻿using DevicesApi.Common.Devices.Enums;
+﻿using DevicesApi.Common.Devices.DTOs;
+using DevicesApi.Common.Devices.Enums;
 using DevicesApi.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,16 +24,22 @@ namespace DevicesApi.Data.Repositories
             await _context.Devices.FindAsync(id);
 
         ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetAllAsync() =>
-            await _context.Devices.ToListAsync();
+        public async Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter)
+        {
+            var query = _context.Devices.AsQueryable();
 
-        ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetByBrandAsync(string brand) =>
-            await _context.Devices.Where(d => d.Brand == brand).ToListAsync();
+            if (!string.IsNullOrEmpty(filter.Brand))
+            {
+                query = query.Where( x => x.Brand == filter.Brand );
+            }
 
-        ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetByStateAsync(DeviceState state) =>
-            await _context.Devices.Where(d => d.State == state).ToListAsync();
+            if ((filter.State.HasValue))
+            {
+                query = query.Where(x => x.State == filter.State);
+            }
+
+            return await query.ToListAsync();
+        }
 
         ///<inheritdoc/>
         public async Task AddAsync(Device device)

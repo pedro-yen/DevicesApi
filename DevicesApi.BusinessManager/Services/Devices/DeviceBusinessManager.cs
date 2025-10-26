@@ -30,21 +30,9 @@ namespace DevicesApi.BusinessManager.Services.Devices
         }
 
         ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetAllAsync()
+        public async Task<IEnumerable<Device>> GetAllAsync(DeviceFilterDto filter)
         {
-            return await _repository.GetAllAsync();
-        }
-
-        ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetByBrandAsync(string brand)
-        {
-            return await _repository.GetByBrandAsync(brand);
-        }
-
-        ///<inheritdoc/>
-        public async Task<IEnumerable<Device>> GetByStateAsync(DeviceState state)
-        {
-            return await _repository.GetByStateAsync(state);
+            return await _repository.GetAllAsync(filter);
         }
 
         ///<inheritdoc/>
