@@ -32,39 +32,12 @@ namespace DevicesApi.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieves all devices
+        /// Retrieves devices with optional filters 
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Device>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Device>>> GetAll([FromQuery] DeviceFilterDto filter)
         {
-            var devices = await _deviceManager.GetAllAsync();
-            return Ok(devices);
-        }
-
-        /// <summary>
-        /// Retrieves devices by brand
-        /// </summary>
-        /// <param name="brand">The Brand identifier</param>
-        [HttpGet("brand/{brand}")]
-        public async Task<ActionResult<IEnumerable<Device>>> GetByBrand(string brand)
-        {
-            var devices = await _deviceManager.GetByBrandAsync(brand);
-            return Ok(devices);
-        }
-
-        /// <summary>
-        /// Retrieves devices filtered by their operational state.
-        /// </summary>
-        /// <param name="state">
-        /// The state of the device:
-        /// - <c>Active - 0</c>: Available and ready for use
-        /// - <c>InUse - 1</c>: Currently in use or assigned
-        /// - <c>Inactive - 2</c>: Not active, possibly decommissioned or offline
-        /// </param>
-        [HttpGet("state/{state}")]
-        public async Task<ActionResult<IEnumerable<Device>>> GetByState(DeviceState state)
-        {
-            var devices = await _deviceManager.GetByStateAsync(state);
+            var devices = await _deviceManager.GetAllAsync(filter);
             return Ok(devices);
         }
 
